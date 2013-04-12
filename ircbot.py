@@ -1,6 +1,6 @@
 import socket
 import re
-from module.geef import random_definition, geef_sloth
+from module.geef import random_definition, geef_happiness
 
 from tornado import iostream
 from tornado import ioloop
@@ -22,7 +22,7 @@ def parse_sender(src):
     return match.groups()  # Nickname, username, hostname
 
 
-class SlothBot(object):
+class IRCBot(object):
 
     def __init__(self, chan, nick):
         self.chan = chan
@@ -50,7 +50,7 @@ class SlothBot(object):
         else:
             args, data = data, ''
             args = args.split()
-        # Parse the source (where the data comes from)
+        # Parse the source (where the data came from)
         nickname, username, hostname = parse_sender(source)
 
         if 'PING' in args:
@@ -63,9 +63,9 @@ class SlothBot(object):
     def handle_bang(self, nickname, data):
         ''' handle any bang command
         '''
-        if '!sloth' in data:
+        if '!scat' in data:
             self._write(('PRIVMSG', self.chan), text="{}: {}".format(
-                                    nickname, geef_sloth()))
+                                    nickname, geef_happiness()))
 
         if '!random' in data:
             self._write(('PRIVMSG', self.chan), text="{}: {}".format(
@@ -84,11 +84,11 @@ class SlothBot(object):
 
 if __name__ == '__main__':
     if CHAN and NICK:
-        SlothBot(CHAN, NICK)
+        IRCBot(CHAN, NICK)
     else:
         chan = raw_input("channel? ")
         nick = raw_input("nickname? ")
         if chan[0] != '#':
             chan = '#' + chan
-        SlothBot(chan, nick)
+        IRCBot(chan, nick)
     ioloop.IOLoop.instance().start()

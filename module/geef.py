@@ -12,7 +12,7 @@ import imgup
 api_url = 'http://ajax.googleapis.com/ajax/services/search/web?v=1.0&q=define:'
 DICT = '/usr/share/dict/words'
 
-referer = 'tippenein'
+referer = 'irc-thing'
 
 def random_definition():
     with open(DICT) as fd:
@@ -32,9 +32,9 @@ def random_definition():
     escaped = htmlparser.unescape(s)
     return unicode(escaped)
 
-def geef_sloth():
-    searchTerm = "sloth"
-
+def geef_happiness():
+    searchTerms = ["sloth","koala","wombat","bunny"]
+    searchTerm = random.choice(searchTerms)
     # escape spaces
     searchTerm = searchTerm.replace(' ','%20')
 
