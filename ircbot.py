@@ -1,5 +1,6 @@
 import socket
 import re
+import random
 from module.geef import random_definition, geef_happiness
 
 from tornado import iostream
@@ -57,20 +58,28 @@ class IRCBot(object):
             # PING :asimov.freenode.net
             self._write(('PONG', data))
         if '!' in data:
-            self.handle_bang(nickname, data)
+            self.handle_request(nickname, data)
+        if self.nick in data:
+            self.respond(nickname)
         self._stream.read_until('\r\n', self._read)
 
-    def handle_bang(self, nickname, data):
+    def handle_request(self, nickname, data):
         ''' handle any bang command
         '''
         if '!scat' in data:
             self._write(('PRIVMSG', self.chan), text="{}: {}".format(
                                     nickname, geef_happiness()))
 
-        if '!random' in data:
-            self._write(('PRIVMSG', self.chan), text="{}: {}".format(
-                                   nickname, random_definition()))
+        #if '!random' in data:
+        #    self._write(('PRIVMSG', self.chan), text="{}: {}".format(
+        #                           nickname, random_definition()))
         pass
+
+    def respond(self, nickname):
+        with open('insults.txt') as fd:
+            insult = random.choice(fd.read().splitlines())
+        self._write(('PRIVMSG', self.chan), text="{}: {}".format(
+                                nickname, insult))
 
     def _write(self, args, text=None):
         if text:
