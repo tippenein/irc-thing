@@ -59,7 +59,7 @@ class IRCBot(object):
             self._write(('PONG', data))
         if '!' in data:
             self.handle_request(nickname, data)
-        if self.nick in data:
+        if self.nick in data and 'freenode.net' not in nickname:
             self.respond(nickname)
         self._stream.read_until('\r\n', self._read)
 
