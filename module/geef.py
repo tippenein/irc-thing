@@ -33,15 +33,15 @@ def random_definition():
     return unicode(escaped)
 
 def geef_happiness():
-    searchTerms = ["sloth","koala","wombat","bunny"]
+    searchTerms = ["sloth","koala","baby wombat","bunny", "otter"]
     searchTerm = random.choice(searchTerms)
     # escape spaces
-    searchTerm = searchTerm.replace(' ','%20')
+    _searchTerm = searchTerm.replace(' ','%20')
 
     # Choose random start page. Images are retrieved in groups of 4
     sloth_start = random.randint(0, 15)
-    url = ('https://ajax.googleapis.com/ajax/services/search/images?' + 'v=1.0&q='+searchTerm+'&start='+str(sloth_start*4))
-    request = urllib2.Request(url, None, {'Referer': 'testing'})
+    url = ('https://ajax.googleapis.com/ajax/services/search/images?' + 'v=1.0&q='+_searchTerm+'&start='+str(sloth_start*4))
+    request = urllib2.Request(url, None, {'Referer': referer})
     response = urllib2.urlopen(request)
 
     # Get JSON result
@@ -54,7 +54,10 @@ def geef_happiness():
     imgurl = dataInfo[random.randint(0, result_size-1)]['unescapedUrl']
 
     img = urllib2.urlopen(imgurl)
-    url = imgup.upload_sloth(img)
+    with open('actions.txt', 'r') as fd:
+        action = random.choice(fd.read().splitlines())
+    title = '{} {}'.format(searchTerm, action)
+    url = imgup.upload_image(img, title)
 
     return url
 

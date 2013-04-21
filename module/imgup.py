@@ -13,13 +13,14 @@ def get_cid():
         client_id = fd.read()
     return client_id
 
-def upload_sloth(image):
+def upload_image(image, title):
     post_url = 'https://api.imgur.com/3/image.json'
     client_id = get_cid() #0# INSERT CLIENT ID
     res = requests.post(
         post_url,
         verify = False,
-        params = {'type': 'file'},
+        params = {'type': 'file',
+                  'title': title},
         files = {'image': image},
         headers= {'Authorization': "Client-ID " + client_id})
     j = res.json()
